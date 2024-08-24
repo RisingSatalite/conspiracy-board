@@ -12,7 +12,9 @@ const CytoscapeComponent = () => {
       elements: [
         { data: { id: 'a' } },
         { data: { id: 'b' } },
-        { data: { id: 'ab', source: 'a', target: 'b' } }
+        { data: { id: 'ab', source: 'a', target: 'b' } },
+        { data: { id: 'c' } },
+        { data: { id: 'abc', source: 'a', target: 'c' } },
       ],
       style: [
         {
@@ -45,7 +47,7 @@ const CytoscapeComponent = () => {
     };
   }, []);
 
-  return <div id="cy" style={{ width: '100%', height: '500px' }} />;
+  return <div id="cy" style={{ width: '100%', height: '1000px' }} />;
 };
 
 export default CytoscapeComponent;
