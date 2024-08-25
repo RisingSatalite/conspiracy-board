@@ -1,27 +1,30 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cytoscape from 'cytoscape';
 
 const ConspiracyBoard = () => {
   const cyRef = useRef(null);
 
-  var elements = []
+  const [graphType, setGraphType] = useState("grid")
+
+  const [elementsHolder, setElementsHolder] = useState([
+    { data: { id: 'a' } },
+    { data: { id: 'b' } },
+    { data: { id: 'c' } },
+    { data: { id: 'd' } },
+    { data: { id: 'e' } },
+    { data: { id: 'f' } },
+    { data: { id: 'ab', source: 'a', target: 'b' } },
+    { data: { id: 'ac', source: 'a', target: 'c' } },
+    { data: { id: 'ad', source: 'a', target: 'd' } },
+    { data: { id: 'ae', source: 'a', target: 'e' } },
+  ])
 
   useEffect(() => {
     cyRef.current = cytoscape({
       container: document.getElementById('cy'),
-      elements: [
-        { data: { id: 'a' } },
-        { data: { id: 'b' } },
-        { data: { id: 'd' } },
-        { data: { id: 'e' } },
-        { data: { id: 'ab', source: 'a', target: 'b' } },
-        { data: { id: 'c' } },
-        { data: { id: 'ac', source: 'a', target: 'c' } },
-        { data: { id: 'ad', source: 'a', target: 'd' } },
-        { data: { id: 'ae', source: 'a', target: 'e' } },
-      ],
+      elements: elementsHolder,
       style: [
         {
           selector: 'node',
@@ -41,7 +44,7 @@ const ConspiracyBoard = () => {
         }
       ],
       layout: {
-        name: 'grid',
+        name: graphType,
         rows: 1
       }
     });
@@ -53,7 +56,9 @@ const ConspiracyBoard = () => {
     };
   }, []);
 
-  return <div id="cy" style={{ width: '100%', height: '1000px' }} />;
+  return <div>
+    <div id="cy" style={{ width: '100%', height: '1000px' }} />
+  </div>;
 };
 
 export default ConspiracyBoard;
