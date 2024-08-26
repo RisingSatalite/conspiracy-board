@@ -7,7 +7,11 @@ import ConspiracyBoard from './ConspiracyBoard';
 const ConspiracyController = () => {
   const cyRef = useRef(null);
 
-  const [graphType, setGraphType] = useState("grid")
+  const [graphType, setGraphType] = useState("circle")
+  const possibleGraphTypes = ["cose", "grid", "concentric", "circle"]
+  const handleGraphChange = (event) => {
+    setGraphType(event.target.value);
+  };
 
   const [elementsHolder, setElementsHolder] = useState([
     { data: { id: 'a' } },
@@ -16,51 +20,27 @@ const ConspiracyController = () => {
     { data: { id: 'd' } },
     { data: { id: 'e' } },
     { data: { id: 'f' } },
+    { data: { id: 'g '} },
     { data: { id: 'ab', source: 'a', target: 'b' } },
     { data: { id: 'ac', source: 'a', target: 'c' } },
     { data: { id: 'ad', source: 'a', target: 'd' } },
     { data: { id: 'ae', source: 'a', target: 'e' } },
   ])
 
-  useEffect(() => {
-    cyRef.current = cytoscape({
-      container: document.getElementById('cy'),
-      elements: elementsHolder,
-      style: [
-        {
-          selector: 'node',
-          style: {
-            'background-color': '#666',
-            label: 'data(id)'
-          }
-        },
-        {
-          selector: 'edge',
-          style: {
-            width: 3,
-            'line-color': '#ccc',
-            'target-arrow-color': '#ccc',
-            'target-arrow-shape': 'triangle'
-          }
-        }
-      ],
-      layout: {
-        name: graphType,
-        rows: 1
-      }
-    });
-
-    return () => {
-      if (cyRef.current) {
-        cyRef.current.destroy();
-      }
-    };
-  }, []);
-
   return(
     <div>
-        <div>Controller</div>
-        <ConspiracyBoard/>
+        <div class="bg-slate-400">Controller</div>
+        <select value={setGraphType} onChange={handleGraphChange}>
+            <option value="" disabled>
+            Choose an item
+            </option>
+            {possibleGraphTypes.map((item, index) => (
+            <option key={index} value={item}>
+                {item}
+            </option>
+            ))}
+        </select>
+        <ConspiracyBoard elementsHolder={elementsHolder} graphType={graphType}/>
     </div>
   )};
 

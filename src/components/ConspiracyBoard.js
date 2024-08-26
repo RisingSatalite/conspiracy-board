@@ -3,23 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import cytoscape from 'cytoscape';
 
-const ConspiracyBoard = () => {
+const ConspiracyBoard = ({elementsHolder, graphType}) => {
   const cyRef = useRef(null);
-
-  const [graphType, setGraphType] = useState("grid")
-
-  const [elementsHolder, setElementsHolder] = useState([
-    { data: { id: 'a' } },
-    { data: { id: 'b' } },
-    { data: { id: 'c' } },
-    { data: { id: 'd' } },
-    { data: { id: 'e' } },
-    { data: { id: 'f' } },
-    { data: { id: 'ab', source: 'a', target: 'b' } },
-    { data: { id: 'ac', source: 'a', target: 'c' } },
-    { data: { id: 'ad', source: 'a', target: 'd' } },
-    { data: { id: 'ae', source: 'a', target: 'e' } },
-  ])
 
   useEffect(() => {
     cyRef.current = cytoscape({
