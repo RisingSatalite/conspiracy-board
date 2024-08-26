@@ -2,8 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import cytoscape from 'cytoscape';
+import ConspiracyBoard from './ConspiracyBoard';
 
-const ConspiracyBoard = () => {
+const ConspiracyController = () => {
   const cyRef = useRef(null);
 
   const [graphType, setGraphType] = useState("grid")
@@ -57,7 +58,10 @@ const ConspiracyBoard = () => {
   }, []);
 
   return(
-    <div id="cy" class="w-full h-[1000px]" className="w-full h-[1000px]"/>
+    <div>
+        <div>Controller</div>
+        <ConspiracyBoard/>
+    </div>
   )};
 
-export default ConspiracyBoard;
+export default ConspiracyController;

@@ -57,7 +57,7 @@ const ConspiracyBoard = () => {
   }, []);
 
   return(
-    <div id="cy" class="w-full h-[1000px]" className="w-full h-[1000px]"/>
+    <div id="cy" style={{ width: '100%', height: '1000px' }}/>
   )};
 
 export default ConspiracyBoard;
