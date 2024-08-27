@@ -11,6 +11,8 @@ const ConspiracyController = () => {
     setGraphType(event.target.value);
   };
 
+  const [style, setStyle] = useState([])
+
   const [elementsHolder, setElementsHolder] = useState([
     { data: { id: 'a' } },
     { data: { id: 'b' } },
@@ -20,6 +22,7 @@ const ConspiracyController = () => {
     { data: { id: 'f' } },
     { data: { id: 'g' } },
   ]);
+  const [selectedElement, setSelectedElement] = useState("")
 
   const [elementsLinks, setElementLinks] = useState([
     { data: { id: 'ab', source: 'a', target: 'b' } },
@@ -56,7 +59,17 @@ const ConspiracyController = () => {
         ))}
       </select>
       <button onClick={addNode}>Add Node</button>
-      <ConspiracyBoard elementsHolder={allElements} graphType={graphType} />
+      <select value={selectedElement} /*onChange={}*/>
+        <option value="" disabled>
+          Select a node
+        </option>
+        {elementsHolder.map((item, index) => (
+          <option key={index} value={item}>
+            {item.data.id}
+          </option>
+        ))}
+      </select>
+      <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={style}/>
     </div>
   );
 };
