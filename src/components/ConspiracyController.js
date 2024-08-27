@@ -80,7 +80,7 @@ const ConspiracyController = () => {
         ))}
       </select>
       <button onClick={addNode}>Add Node</button>
-      <select value={selectedElement} /*onChange={}*/>
+      <select value={selectedElement} onChange={setingSelectedElement}>
         <option value="" disabled>
           Select a node
         </option>
