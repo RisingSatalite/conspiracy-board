@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import cytoscape from 'cytoscape';
 
-const ConspiracyBoard = ({ elementsHolder, graphType, style }) => {
+const ConspiracyBoard = ({ elementsHolder, graphType, style=[] }) => {
   const cyRef = useRef(null);
 
   useEffect(() => {
