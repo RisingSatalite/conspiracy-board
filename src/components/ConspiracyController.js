@@ -23,6 +23,10 @@ const ConspiracyController = () => {
     { data: { id: 'g' } },
   ]);
   const [selectedElement, setSelectedElement] = useState("")
+  const setingSelectedElement = (event) => {
+    setSelectedElement(event.target.value)
+
+  };
 
   const [elementsLinks, setElementLinks] = useState([
     { data: { id: 'ab', source: 'a', target: 'b' } },
