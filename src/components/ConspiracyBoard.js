@@ -3,7 +3,27 @@
 import React, { useEffect, useRef } from 'react';
 import cytoscape from 'cytoscape';
 
-const ConspiracyBoard = ({ elementsHolder, graphType, style=[] }) => {
+const ConspiracyBoard = (
+  { elementsHolder, 
+    graphType="circle", 
+    style=[
+  {
+    selector: 'node',
+    style: {
+      'background-color': '#666',
+      label: 'data(id)',
+    },
+  },
+  {
+    selector: 'edge',
+    style: {
+      width: 3,
+      'line-color': '#ccc',
+      'target-arrow-color': '#ccc',
+      'target-arrow-shape': 'triangle',
+    },
+  },
+] }) => {
   const cyRef = useRef(null);
 
   useEffect(() => {
@@ -14,24 +34,7 @@ const ConspiracyBoard = ({ elementsHolder, graphType, style=[] }) => {
     cyRef.current = cytoscape({
       container: document.getElementById('cy'),
       elements: elementsHolder,
-      style: [
-        {
-          selector: 'node',
-          style: {
-            'background-color': '#666',
-            label: 'data(id)',
-          },
-        },
-        {
-          selector: 'edge',
-          style: {
-            width: 3,
-            'line-color': '#ccc',
-            'target-arrow-color': '#ccc',
-            'target-arrow-shape': 'triangle',
-          },
-        },
-      ],
+      style: style,
       layout: {
         name: graphType,
         rows: 1,
