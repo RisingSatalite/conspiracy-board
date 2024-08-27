@@ -28,6 +28,18 @@ const ConspiracyController = () => {
         'target-arrow-shape': 'triangle',
       },
     },
+    {//Example style
+      selector: 'node[id = "example"]',  // Targeting node with id 'a'
+      style: {
+        'background-image': 'url(https://example.com/image.png)',  // Replace with your image URL
+        'background-fit': 'cover',
+        'background-opacity': 1,
+        'width': '100px',  // Adjust size if needed
+        'height': '100px',
+        'border-width': 2,
+        'border-color': '#000',
+      }
+    }
   ])
 
   const [elementsHolder, setElementsHolder] = useState([
