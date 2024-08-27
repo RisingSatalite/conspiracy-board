@@ -42,7 +42,6 @@ const ConspiracyController = () => {
   const [selectedElement, setSelectedElement] = useState("")
   const setingSelectedElement = (event) => {
     setSelectedElement(event.target.value)
-
   };
 
   const [elementsLinks, setElementLinks] = useState([
@@ -85,9 +84,9 @@ const ConspiracyController = () => {
           Select a node
         </option>
         {elementsHolder.map((item, index) => (
-          <option key={index} value={item}>
+        <option key={index} value={item.data.id}>
             {item.data.id}
-          </option>
+        </option>
         ))}
       </select>
       <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={style}/>
