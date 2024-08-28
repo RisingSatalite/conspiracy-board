@@ -77,9 +77,27 @@ const ConspiracyController = () => {
     setElementsHolder((prevElements) => [...prevElements, newNode]);
   };
 
+  // Function to handle changing the ID
+  const handleIdChange = (e) => {
+    const newId = e.target.value;
+
+    // Prevent setting an empty string as an ID
+    if (newId.trim() === "") {
+      return;
+    }
+    
+    setSelectedElement(newId);
+
+    // Find the index of the selected element
+    const updatedElements = elementsHolder.map(item => 
+      item.data.id === selectedElement ? { ...item, data: { ...item.data, id: newId } } : item
+    );
+    setElementsHolder(updatedElements);
+  };
+
   return (
     <div>
-      <div className="bg-slate-400">Controller</div>
+      <span className="bg-slate-400">Controller</span>
       <select value={graphType} onChange={handleGraphChange}>
         <option value="" disabled>
           Choose an display layout
@@ -90,7 +108,7 @@ const ConspiracyController = () => {
           </option>
         ))}
       </select>
-      <button onClick={addNode}>Add Node</button>
+      <button className="bg-slate-400" onClick={addNode}>Add Node</button>
       <select value={selectedElement} onChange={setingSelectedElement}>
         <option value="" disabled>
           Select a node
@@ -101,6 +119,13 @@ const ConspiracyController = () => {
         </option>
         ))}
       </select>
+      {selectedElement && (
+        <input
+          className="bg-stone-300"
+          value={selectedElement}
+          onChange={handleIdChange}
+        />
+      )}
       <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={style}/>
     </div>
   );
