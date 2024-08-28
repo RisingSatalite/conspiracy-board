@@ -92,7 +92,15 @@ const ConspiracyController = () => {
     const updatedElements = elementsHolder.map(item => 
       item.data.id === selectedElement ? { ...item, data: { ...item.data, id: newId } } : item
     );
+
+    var updatedLinks = elementsLinks.map(item =>
+      item.data.source === selectedElement ? { ...item, data: { ...item.data, source: newId } } : item
+    )
+    updatedLinks = updatedLinks.map(item =>
+      item.data.target === selectedElement ? { ...item, data: { ...item.data, target: newId } } : item
+    )
     setElementsHolder(updatedElements);
+    setElementLinks(updatedLinks)
   };
 
   return (
