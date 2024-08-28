@@ -74,8 +74,16 @@ const ConspiracyController = () => {
   const addNode = () => {
     const newNodeId = `node${elementsHolder.length + 1}`;
     const newNode = { data: { id: newNodeId } };
-    setElementsHolder((prevElements) => [...prevElements, newNode]);
+    if(elementsHolder.includes(newNode)){
+      addNodeRandom(newNode)
+    }else{
+      setElementsHolder((prevElements) => [...prevElements, newNode]);
+    }
   };
+
+  const addNodeRandom = (newNode) => {
+    setElementsHolder((prevElements) => [...prevElements, newNode]);
+  }
 
   // Function to handle changing the ID
   const handleIdChange = (e) => {
@@ -84,6 +92,10 @@ const ConspiracyController = () => {
     // Prevent setting an empty string as an ID
     if (newId.trim() === "") {
       return;
+    }
+
+    if(selectedElement.includes(newId)){
+      return;//Do not chagne a name of a node to be the same as another node
     }
     
     setSelectedElement(newId);
