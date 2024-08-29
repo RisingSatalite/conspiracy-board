@@ -83,16 +83,22 @@ const ConspiracyController = () => {
   };
 
   const deleteNode = (e) => {
-    const removeID = e.target.value;
+    const removeID = selectedElement;
+ 
+    console.log(removeID)
+    setSelectedElement("")
 
+    // Remove node from elementsHolder
     const updatedElements = elementsHolder.filter(element => element.data.id !== removeID);
-
-    var updatedLinks = elementsLinks.filter(item => item.data.target !== removeID);
-    updatedLinks = updatedLinks.filter(item => item.data.target !== removeID);
-
+  
+    // Remove links associated with the node from elementsLinks
+    let updatedLinks = elementsLinks.filter(item => item.data.target !== removeID && item.data.source !== removeID);
+  
+    // Update state
     setElementsHolder(updatedElements);
-    setElementLinks(updatedLinks)
-  }
+    setElementLinks(updatedLinks);
+  };
+  
 
   // Function to add a new node
   const addNode = () => {
