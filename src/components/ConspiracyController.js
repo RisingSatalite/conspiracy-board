@@ -65,7 +65,6 @@ const ConspiracyController = () => {
 
   const [allElements, setAllElements] = useState([...elementsHolder, ...elementsLinks])
 
-
   useEffect(() => {
     setAllElements([...elementsHolder, ...elementsLinks])
   }, [elementsHolder, elementsLinks]);
@@ -81,8 +80,14 @@ const ConspiracyController = () => {
     }
   };
 
-  const addNodeRandom = (newNode) => {
-    setElementsHolder((prevElements) => [...prevElements, newNode]);
+  const addNodeRandom = (oldNode) => {
+    const newNodeId = `node${elementsHolder.length + 1}${Math.random(0,100)}`;
+    const newNode = { data: { id: newNodeId } };
+    if(elementsHolder.includes(newNode)){
+      addNodeRandom(newNode)
+    }else{
+      setElementsHolder((prevElements) => [...prevElements, newNode]);
+    }
   }
 
   // Function to handle changing the ID
