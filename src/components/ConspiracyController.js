@@ -69,26 +69,25 @@ const ConspiracyController = () => {
     setAllElements([...elementsHolder, ...elementsLinks])
   }, [elementsHolder, elementsLinks]);
 
-  // Function to add a new node
-  const addNode = () => {
-    const newNodeId = `node${elementsHolder.length + 1}`;
-    const newNode = { data: { id: newNodeId } };
-    if(elementsHolder.includes(newNode)){
-      addNodeRandom(newNode)
-    }else{
-      setElementsHolder((prevElements) => [...prevElements, newNode]);
+  const generateUniqueId = () => {
+    let newNodeId;
+    let isUnique = false;
+
+    while (!isUnique) {
+      newNodeId = `node${Math.floor(Math.random() * 100)}`;
+      // Check if the generated ID already exists in the elementsHolder
+      isUnique = !elementsHolder.some(node => node.data.id === newNodeId);
     }
+
+    return newNodeId;
   };
 
-  const addNodeRandom = (oldNode) => {
-    const newNodeId = `node${elementsHolder.length + 1}${Math.random(0,100)}`;
+  // Function to add a new node
+  const addNode = () => {
+    const newNodeId = generateUniqueId();
     const newNode = { data: { id: newNodeId } };
-    if(elementsHolder.includes(newNode)){
-      addNodeRandom(newNode)
-    }else{
-      setElementsHolder((prevElements) => [...prevElements, newNode]);
-    }
-  }
+    setElementsHolder((prevElements) => [...prevElements, newNode]);
+  };
 
   // Function to handle changing the ID
   const handleIdChange = (e) => {
@@ -100,7 +99,7 @@ const ConspiracyController = () => {
     }
 
     if(selectedElement.includes(newId)){
-      return;//Do not chagne a name of a node to be the same as another node
+      //return;//Do not chagne a name of a node to be the same as another node
     }
     
     setSelectedElement(newId);
