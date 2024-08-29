@@ -82,6 +82,18 @@ const ConspiracyController = () => {
     return newNodeId;
   };
 
+  const deleteNode = (e) => {
+    const removeID = e.target.value;
+
+    const updatedElements = elementsHolder.filter(element => element.data.id !== removeID);
+
+    var updatedLinks = elementsLinks.filter(item => item.data.target !== removeID);
+    updatedLinks = updatedLinks.filter(item => item.data.target !== removeID);
+
+    setElementsHolder(updatedElements);
+    setElementLinks(updatedLinks)
+  }
+
   // Function to add a new node
   const addNode = () => {
     const newNodeId = generateUniqueId();
@@ -148,11 +160,14 @@ const ConspiracyController = () => {
         ))}
       </select>
       {selectedElement && (
-        <input
-          className="bg-stone-300"
-          value={selectedElement}
-          onChange={handleIdChange}
-        />
+        <div>
+          <input
+            className="bg-stone-300"
+            value={selectedElement}
+            onChange={handleIdChange}
+          />
+          <button className="bg-slate-400" onClick={deleteNode}>Delete Node</button>
+        </div>
       )}
       <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={style}/>
     </div>
