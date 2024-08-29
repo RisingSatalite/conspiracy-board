@@ -89,6 +89,10 @@ const ConspiracyController = () => {
     setElementsHolder((prevElements) => [...prevElements, newNode]);
   };
 
+  const idExists = (id) => {
+    return elementsHolder.some(element => element.data.id === id);
+  };
+
   // Function to handle changing the ID
   const handleIdChange = (e) => {
     const newId = e.target.value;
@@ -98,8 +102,8 @@ const ConspiracyController = () => {
       return;
     }
 
-    if(selectedElement.includes(newId)){
-      //return;//Do not chagne a name of a node to be the same as another node
+    if(idExists(newId)){
+      return;//Do not chagne a name of a node to be the same as another node
     }
     
     setSelectedElement(newId);
