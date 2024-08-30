@@ -56,6 +56,8 @@ const ConspiracyController = () => {
     setSelectedElement(event.target.value)
   };
 
+  const [targetSelectedElement, setTargetSelectedElement] = useState("");
+
   const [elementsLinks, setElementLinks] = useState([
     { data: { id: 'ab', source: 'a', target: 'b' } },
     { data: { id: 'ac', source: 'a', target: 'c' } },
@@ -167,12 +169,23 @@ const ConspiracyController = () => {
       </select>
       {selectedElement && (
         <div>
+          <button className="bg-slate-400" onClick={deleteNode}>Delete Node</button>
           <input
             className="bg-stone-300"
             value={selectedElement}
             onChange={handleIdChange}
           />
-          <button className="bg-slate-400" onClick={deleteNode}>Delete Node</button>
+          <select value={targetSelectedElement} onChange={(e) => setTargetSelectedElement(e.target.value)}>
+            <option value="" disabled>
+              Select a node
+            </option>
+            {elementsHolder.map((item, index) => (
+            <option key={index} value={item.data.id}>
+                {item.data.id}
+            </option>
+            ))}
+          </select>
+          <button /*onClick={("")}*/>Link</button>
         </div>
       )}
       <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={style}/>
