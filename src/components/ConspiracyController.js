@@ -67,6 +67,10 @@ const ConspiracyController = () => {
 
   const [allElements, setAllElements] = useState([...elementsHolder, ...elementsLinks])
 
+  const addNewElementLink = () => {
+    setElementLinks([...elementsLinks, { data: {id: selectedElement+targetSelectedElement, source: selectedElement, target: targetSelectedElement}}])
+  }
+
   useEffect(() => {
     setAllElements([...elementsHolder, ...elementsLinks])
   }, [elementsHolder, elementsLinks]);
@@ -185,7 +189,7 @@ const ConspiracyController = () => {
             </option>
             ))}
           </select>
-          <button /*onClick={("")}*/>Link</button>
+          <button onClick={addNewElementLink}>Link</button>
         </div>
       )}
       <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={style}/>
