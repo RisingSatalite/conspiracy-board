@@ -42,6 +42,13 @@ const ConspiracyController = () => {
     }
   ])
 
+  const addStyle = () => {
+    selector = `node[id = ${selectedElement}]`
+    styleVar = "s" 
+    const newStyle = selector 
+    setStyle([...style])
+  }
+
   const [elementsHolder, setElementsHolder] = useState([
     { data: { id: 'a' } },
     { data: { id: 'b' } },
