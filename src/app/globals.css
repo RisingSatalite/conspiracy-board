@@ -33,3 +33,7 @@ body {
     text-wrap: balance;
   }
 }
+
+button {
+  background-color: rgb(148, 154, 159);
+}
