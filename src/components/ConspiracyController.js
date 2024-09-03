@@ -230,10 +230,12 @@ const ConspiracyController = () => {
             ))}
           </select>
           <button onClick={addNewElementLink}>Link</button>
+          <div>
+            <input type="file" id="backgroundImageInput" name="file" />
+            <button onClick={addStyle}>Set image background</button>
+          </div>
         </div>
       )}
-      <input type="file" id="backgroundImageInput" name="file" />
-      <button onClick={addStyle}>Set image background</button>
       <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={nodeStyle}/>
     </div>
   );
