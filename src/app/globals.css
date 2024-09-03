@@ -37,3 +37,7 @@ body {
 button {
   background-color: rgb(148, 154, 159);
 }
+
+input {
+  background-color: aquamarine;
+}
