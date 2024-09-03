@@ -11,7 +11,7 @@ const ConspiracyController = () => {
     setGraphType(event.target.value);
   };
 
-  const [style, setStyle] = useState([
+  const [nodeStyle, setStyle] = useState([
     {
       selector: 'node',
       style: {
@@ -29,13 +29,13 @@ const ConspiracyController = () => {
       },
     },
     {//Example style
-      selector: 'node[id = "example"]',  // Targeting node with id 'a'
+      selector: 'node[id = "example"]',  // Targeting node with id 'example'
       style: {
         'background-image': 'url(https://example.com/image.png)',  // Replace with your image URL
         'background-fit': 'cover',
         'background-opacity': 1,
-        'width': '100px',  // Adjust size if needed
-        'height': '100px',
+        'width': '50px',  // Adjust size if needed
+        'height': '50px',
         'border-width': 2,
         'border-color': '#000',
       }
@@ -43,10 +43,43 @@ const ConspiracyController = () => {
   ])
 
   const addStyle = () => {
+    document.getElementById('backgroundImageInput').addEventListener('submit', async function(event) {
+      event.preventDefault(); // Prevent the default form submission
+    
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0]; // Get the selected file
+    
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file); // Append the file to FormData
+    
+        try {
+          const response = await fetch('/upload', { // Replace '/upload' with your server endpoint
+            method: 'POST',
+            body: formData,
+          });
+    
+          if (response.ok) {
+            document.getElementById('status').textContent = 'File uploaded successfully!';
+          } else {
+            document.getElementById('status').textContent = 'File upload failed.';
+          }
+        } catch (error) {
+          document.getElementById('status').textContent = 'Error: ' + error.message;
+        }
+      } else {
+        document.getElementById('status').textContent = 'No file selected.';
+      }
+    });
+
     selector = `node[id = ${selectedElement}]`
-    styleVar = "s" 
+    style = {
+          'background-image': 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...)',
+          'background-fit': 'cover',
+          'background-opacity': 0.5
+            }
     const newStyle = selector 
-    setStyle([...style])
+    setStyle([...nodeStyle, newStyle])
   }
 
   const [elementsHolder, setElementsHolder] = useState([
@@ -199,7 +232,9 @@ const ConspiracyController = () => {
           <button onClick={addNewElementLink}>Link</button>
         </div>
       )}
-      <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={style}/>
+      <input type="file" id="backgroundImageInput" name="file" />
+      <button onClick={addStyle}>Set image background</button>
+      <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={nodeStyle}/>
     </div>
   );
 };
