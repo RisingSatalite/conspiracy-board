@@ -37,7 +37,7 @@ const ConspiracyBoard = (
       style: style,
       layout: {
         name: graphType,
-        rows: 1,
+        rows: 5,
       },
     });
 
@@ -46,7 +46,7 @@ const ConspiracyBoard = (
         cyRef.current.destroy();
       }
     };
-  }, [elementsHolder, graphType]);
+  }, [elementsHolder, graphType, style]);
 
   return <div id="cy" style={{ width: '100%', height: '1000px' }} />;
 };

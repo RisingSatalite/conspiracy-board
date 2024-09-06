@@ -31,7 +31,7 @@ const ConspiracyController = () => {
       },
     },
     {//Example style
-      selector: 'node[id = "example"]',  // Targeting node with id 'example'
+      selector: 'node[id = "__example"]',  // Targeting node with id '__example'
       style: {
         'background-image': 'url(https://example.com/image.png)',  // Replace with your image URL
         'background-fit': 'cover',
@@ -46,35 +46,38 @@ const ConspiracyController = () => {
 
   const addStyle = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
-
+  
     const fileInput = document.getElementById('backgroundImageInput');
     const file = fileInput.files[0]; // Get the selected file
-
-    if (file) {
+  
+    if (file && selectedElement) { // Ensure a file and node are selected
       const reader = new FileReader();
       reader.onloadend = function () {
         const base64String = reader.result;
-
-        // Assuming `selectedElement` is the ID of the node you want to style
-        const selector = `node[id = "${selectedElement}"]`;
-        const style = {
-          'background-image': `url(${base64String})`,
-          'background-fit': 'cover',
-          'background-opacity': 0.5,
-        };
+  
         const newStyle = {
-          selector: selector,
-          style: style,
+          selector: `node[id = "${selectedElement}"]`,
+          style: {
+            'background-image': `url(${base64String})`,
+            'background-fit': 'cover',
+            'background-opacity': 1,
+            'width': '50px',  // Adjust size if needed
+            'height': '50px',
+            'border-width': 2,
+            'border-color': '#000',
+          }
         };
-
-        setStyle([...nodeStyle, newStyle])
+        console.log(newStyle)
+  
+        setStyle((prevStyles) => [...prevStyles, newStyle]); // Update the style state
       };
-
+  
       reader.readAsDataURL(file); // Convert the file to a base64 string
     } else {
-      alert('No file selected.');
+      alert('No file selected or no node selected.');
     }
   };
+  
 
   const [elementsHolder, setElementsHolder] = useState([
     { data: { id: 'a' } },
