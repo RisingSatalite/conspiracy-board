@@ -7,6 +7,8 @@ const ConspiracyController = () => {
   const [graphType, setGraphType] = useState("circle");
   const possibleGraphTypes = ["cose", "grid", "concentric", "circle"];
 
+  const [imageHolder, setImageHolder] = useState(null)
+
   const handleGraphChange = (event) => {
     setGraphType(event.target.value);
   };
@@ -42,45 +44,37 @@ const ConspiracyController = () => {
     }
   ])
 
-  const addStyle = () => {
-    document.getElementById('backgroundImageInput').addEventListener('submit', async function(event) {
-      event.preventDefault(); // Prevent the default form submission
-    
-      const fileInput = document.getElementById('fileInput');
-      const file = fileInput.files[0]; // Get the selected file
-    
-      if (file) {
-        const formData = new FormData();
-        formData.append('file', file); // Append the file to FormData
-    
-        try {
-          const response = await fetch('/upload', { // Replace '/upload' with your server endpoint
-            method: 'POST',
-            body: formData,
-          });
-    
-          if (response.ok) {
-            document.getElementById('status').textContent = 'File uploaded successfully!';
-          } else {
-            document.getElementById('status').textContent = 'File upload failed.';
-          }
-        } catch (error) {
-          document.getElementById('status').textContent = 'Error: ' + error.message;
-        }
-      } else {
-        document.getElementById('status').textContent = 'No file selected.';
-      }
-    });
+  const addStyle = (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
 
-    selector = `node[id = ${selectedElement}]`
-    style = {
-          'background-image': 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...)',
+    const fileInput = document.getElementById('backgroundImageInput');
+    const file = fileInput.files[0]; // Get the selected file
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        const base64String = reader.result;
+
+        // Assuming `selectedElement` is the ID of the node you want to style
+        const selector = `node[id = "${selectedElement}"]`;
+        const style = {
+          'background-image': `url(${base64String})`,
           'background-fit': 'cover',
-          'background-opacity': 0.5
-            }
-    const newStyle = selector 
-    setStyle([...nodeStyle, newStyle])
-  }
+          'background-opacity': 0.5,
+        };
+        const newStyle = {
+          selector: selector,
+          style: style,
+        };
+
+        setStyle([...nodeStyle, newStyle])
+      };
+
+      reader.readAsDataURL(file); // Convert the file to a base64 string
+    } else {
+      alert('No file selected.');
+    }
+  };
 
   const [elementsHolder, setElementsHolder] = useState([
     { data: { id: 'a' } },
@@ -231,7 +225,7 @@ const ConspiracyController = () => {
           </select>
           <button onClick={addNewElementLink}>Link</button>
           <div>
-            <input type="file" id="backgroundImageInput" name="file" />
+            <input type="file" id="backgroundImageInput" name="file" onClick={(e) => setImageHolder(e.target.value)}/>
             <button onClick={addStyle}>Set image background</button>
           </div>
         </div>
