@@ -36,8 +36,8 @@ const ConspiracyController = () => {
         'background-image': 'url(https://example.com/image.png)',  // Replace with your image URL
         'background-fit': 'cover',
         'background-opacity': 1,
-        'width': '50px',  // Adjust size if needed
-        'height': '50px',
+        'width': '60x',  // Adjust size if needed
+        'height': '6px',
         'border-width': 2,
         'border-color': '#000',
       }
@@ -183,10 +183,12 @@ const ConspiracyController = () => {
     setElementsHolder(updatedElements);
     setElementLinks(updatedLinks)
 
-    //styleIDChange = nodeStyle.map(item =>//CHange ID for styles as well
-      //item.data.target === selectedElement ? { ...item, data: { ...item.data, target: newId } } : item
-    //)
-    //setStyle(styleIDChange)
+    const styleIDchange = nodeStyle.map(item =>
+      item.selector === `node[id = "${selectedElement}"]`
+        ? { ...item, selector: `node[id = "${newId}"]` } // Replace with the new ID
+        : item
+    );
+    setStyle(styleIDchange)
   };
 
   return (
