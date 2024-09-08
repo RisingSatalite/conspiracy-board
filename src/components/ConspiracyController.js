@@ -67,9 +67,32 @@ const ConspiracyController = () => {
             'border-color': '#000',
           }
         };
-        console.log(newStyle)
+        console.log(newStyle);
   
-        setStyle((prevStyles) => [...prevStyles, newStyle]); // Update the style state
+        let usedBefore = false;
+  
+        const styleIDChange = nodeStyle.map(item => {
+          if (item.selector === `node[id = "${selectedElement}"]`) {
+            usedBefore = true;
+            // Merge the existing style with the new style
+            return {
+              ...item,
+              style: {
+                ...item.style, // Keep existing styles
+                ...newStyle.style, // Override with the new styles
+              }
+            };
+          }
+          return item; // Don't forget to return the item in other cases
+        });
+  
+        // If the style was used before, update the styles
+        if (usedBefore) {
+          setStyle(styleIDChange);
+        } else {
+          // Else add the new style to the list
+          setStyle((prevStyles) => [...prevStyles, newStyle]);
+        }
       };
   
       reader.readAsDataURL(file); // Convert the file to a base64 string
@@ -77,6 +100,7 @@ const ConspiracyController = () => {
       alert('No file selected or no node selected.');
     }
   };
+  
   
 
   const [elementsHolder, setElementsHolder] = useState([
