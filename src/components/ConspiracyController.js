@@ -183,9 +183,9 @@ const ConspiracyController = () => {
     setElementsHolder(updatedElements);
     setElementLinks(updatedLinks)
 
-    styleIDChange = nodeStyle.map(item =>//CHange ID for styles as well
-      item.data.target === selectedElement ? { ...item, data: { ...item.data, target: newId } } : item
-    )
+    //styleIDChange = nodeStyle.map(item =>//CHange ID for styles as well
+      //item.data.target === selectedElement ? { ...item, data: { ...item.data, target: newId } } : item
+    //)
     //setStyle(styleIDChange)
   };
 
