@@ -215,6 +215,14 @@ const ConspiracyController = () => {
     setStyle(styleIDchange)
   };
 
+  const uploadData = () => {
+    //Upload
+  }
+
+  const downloadData = () => {
+    //Download
+  }
+
   return (
     <div>
       <span className="bg-slate-400">Controller</span>
