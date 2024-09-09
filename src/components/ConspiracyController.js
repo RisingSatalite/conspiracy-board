@@ -100,8 +100,6 @@ const ConspiracyController = () => {
       alert('No file selected or no node selected.');
     }
   };
-  
-  
 
   const [elementsHolder, setElementsHolder] = useState([
     { data: { id: 'a' } },
@@ -220,8 +218,20 @@ const ConspiracyController = () => {
   }
 
   const downloadData = () => {
-    //Download
+    //Node Diagram View NDV format
+    const nodeInformation = {nodes: elementsHolder, arrows: elementsLinks, style: nodeStyle};
+    const jsonObj = JSON.stringify(nodeInformation)
+    downloadFile("node diagram.ndv", jsonObj)
   }
+
+  const downloadFile = (filename, content) => {
+    const element = document.createElement('a');//I assume completely pointless
+    const file = new Blob([content], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = filename;
+    document.body.appendChild(element); // Create element and then use it to download file?
+    element.click();
+  };
 
   return (
     <div>
