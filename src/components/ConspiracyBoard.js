@@ -2,7 +2,9 @@
 
 import React, { useEffect, useRef } from 'react';
 import cytoscape from 'cytoscape';
-
+import avsdf from 'cytoscape-avsdf';
+import klay from 'cytoscape-klay';
+ 
 const ConspiracyBoard = (
   { elementsHolder, 
     graphType="circle", 
@@ -25,6 +27,9 @@ const ConspiracyBoard = (
   },
 ] }) => {
   const cyRef = useRef(null);
+
+  cytoscape.use( avsdf );
+  cytoscape.use( klay );
 
   useEffect(() => {
     if (cyRef.current) {

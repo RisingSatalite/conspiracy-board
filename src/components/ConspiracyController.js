@@ -5,7 +5,7 @@ import ConspiracyBoard from './ConspiracyBoard';
 
 const ConspiracyController = () => {
   const [graphType, setGraphType] = useState("circle");
-  const possibleGraphTypes = ["cose", "grid", "concentric", "circle"];
+  const possibleGraphTypes = ["cose", "grid", "concentric", "circle", "avsdf", "klay"];
 
   const [imageHolder, setImageHolder] = useState(null)
 
