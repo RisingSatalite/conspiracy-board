@@ -258,7 +258,7 @@ const ConspiracyController = () => {
         style={{ display: 'none' }}
         id="fileInput"
       />
-      <button onClick={uploadData}>Upload data</button>
+      <button onClick={() => document.getElementById('fileInput').click()}>Upload data</button>
       <button onClick={downloadData}>Download data</button>
       <br/>
       <span className="bg-slate-400">Controller</span>
