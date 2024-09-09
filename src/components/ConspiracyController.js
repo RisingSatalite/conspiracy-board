@@ -225,6 +225,9 @@ const ConspiracyController = () => {
 
   return (
     <div>
+      <button onClick={uploadData}>Upload data</button>
+      <button onClick={downloadData}>Download data</button>
+      <br/>
       <span className="bg-slate-400">Controller</span>
       <select value={graphType} onChange={handleGraphChange}>
         <option value="" disabled>
