@@ -213,8 +213,24 @@ const ConspiracyController = () => {
     setStyle(styleIDchange)
   };
 
-  const uploadData = () => {
-    //Upload
+  const uploadData = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+  
+    reader.onload = (e) => {
+      const content = e.target.result;
+      try{
+        const data = JSON.parse(content)
+        setElementsHolder(data.nodes)
+        setElementLinks(data.arrows)
+        setStyle(data.style)
+      } catch (error) {
+        console.error('Error parsing imported data:', error);
+        alert('An error occurred while reading the data: ' + error);
+      }
+    };
+
+    reader.readAsText(file);
   }
 
   const downloadData = () => {
@@ -235,6 +251,13 @@ const ConspiracyController = () => {
 
   return (
     <div>
+      <input
+        type="file"
+        accept=".ndv"
+        onChange={uploadData}
+        style={{ display: 'none' }}
+        id="fileInput"
+      />
       <button onClick={uploadData}>Upload data</button>
       <button onClick={downloadData}>Download data</button>
       <br/>
