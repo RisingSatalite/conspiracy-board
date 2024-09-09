@@ -130,6 +130,14 @@ const ConspiracyController = () => {
     setElementLinks([...elementsLinks, { data: {id: selectedElement+targetSelectedElement, source: selectedElement, target: targetSelectedElement}}])
   }
 
+  const removeElementLink = () => {
+    const isRemoveTarget = (arrow) => {
+      return !((arrow.data.source == selectedElement && arrow.data.target == targetSelectedElement) || (arrow.data.source == targetSelectedElement && arrow.data.target == selectedElement));
+    }
+    const removeLink = elementsLinks.filter(isRemoveTarget)
+    setElementLinks(removeLink)
+  }
+
   useEffect(() => {
     setAllElements([...elementsHolder, ...elementsLinks])
   }, [elementsHolder, elementsLinks]);
@@ -301,7 +309,7 @@ const ConspiracyController = () => {
             </option>
             ))}
           </select>
-          <button onClick={addNewElementLink}>Link</button>
+          <button onClick={addNewElementLink}>Link</button><button onClick={removeElementLink}>Delete Links</button>
           <div>
             <input type="file" id="backgroundImageInput" name="file" onClick={(e) => setImageHolder(e.target.value)}/>
             <button onClick={addStyle}>Set image background</button>
