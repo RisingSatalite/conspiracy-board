@@ -281,6 +281,7 @@ const ConspiracyController = () => {
         ))}
       </select>
       <button className="bg-slate-400" onClick={addNode}>Add Node</button>
+      </br>
       <select value={selectedElement} onChange={setingSelectedElement}>
         <option value="" disabled>
           Select a node
