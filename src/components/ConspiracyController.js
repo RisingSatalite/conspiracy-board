@@ -3,6 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import ConspiracyBoard from './ConspiracyBoard';
 
+//Export libraries
+import domtoimage from 'dom-to-image';
+import { saveAs } from 'file-saver';
+
 const ConspiracyController = () => {
   const [graphType, setGraphType] = useState("circle");
   const possibleGraphTypes = ["cose", "grid", "concentric", "circle", "avsdf", "klay"];
@@ -257,6 +261,29 @@ const ConspiracyController = () => {
     element.click();
   };
 
+  const exportImage = () => {
+    domtoimage.toBlob(document.getElementById("cy"))
+    .then(function (blob) {
+        var FileSaver = require('file-saver');
+        FileSaver.saveAs(blob, 'conspiracy.png');
+    });
+  }
+
+  const exportSVG = () => {
+    const node = document.getElementById("cy");
+
+    domtoimage.toSvg(node)
+    .then((dataUrl) => {
+      // Remove the `data:image/svg+xml;charset=utf-8,` prefix
+      const svgContent = dataUrl.replace(/^data:image\/svg\+xml;charset=utf-8,/, '');
+      const svgBlob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+      saveAs(svgBlob, 'conspiracy.svg');
+    })
+    .catch((error) => {
+      console.error('Error converting HTML to SVG:', error);
+    });
+  }
+
   return (
     <div>
       <input
@@ -268,6 +295,8 @@ const ConspiracyController = () => {
       />
       <button onClick={() => document.getElementById('fileInput').click()}>Upload data</button>
       <button onClick={downloadData}>Download data</button>
+      <button onClick={exportImage}>Download PNG image</button>
+      <button onClick={exportSVG}>Download SVG image</button>
       <br/>
       <span className="bg-slate-400">Controller</span>
       <select value={graphType} onChange={handleGraphChange}>
