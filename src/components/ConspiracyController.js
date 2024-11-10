@@ -116,6 +116,7 @@ const ConspiracyController = () => {
     { data: { id: 'g' } },
   ]);
   const [selectedElement, setSelectedElement] = useState("")
+
   const setingSelectedElement = (event) => {
     setSelectedElement(event.target.value)
   };
@@ -299,22 +300,22 @@ const ConspiracyController = () => {
       <button onClick={exportImage}>Download PNG image</button>
       <button onClick={exportSVG}>Download SVG image</button>
       <br/>
-      <span className="bg-slate-400">Controller</span>
-      <Select
-            value={elementsHolder.find((item) => item.data.id === targetSelectedElement)}
-            onChange={(selectedOption) => setSelectedElement(selectedOption.data.id)}
-            options={elementsHolder.map((item) => ({
-            ...item, // Spread the original item data
-            value: item.data.id,
-            label: item.data.id,
-            }))}
-            placeholder="Select a node"
-            isSearchable
-            getOptionValue={(option) => option.data.id}  // Use the original `data.id` as the value
-            getOptionLabel={(option) => option.data.id}  // Display the `data.id` as the label
-      />
+      <span>Controller</span>
       <button className="bg-slate-400" onClick={addNode}>Add Node</button>
-      <br/>
+      <Select
+        class="react-select" className="react-select"
+        value={elementsHolder.find((item) => item.data.id === selectedElement)}
+        onChange={(selectedOption) => setSelectedElement(selectedOption.data.id)}
+        options={elementsHolder.map((item) => ({
+        ...item, // Spread the original item data
+        value: item.data.id,
+        label: item.data.id,
+        }))}
+          placeholder="Select a node"
+        isSearchable
+        getOptionValue={(option) => option.data.id}  // Use the original `data.id` as the value
+        getOptionLabel={(option) => option.data.id}  // Display the `data.id` as the label
+      />
       {selectedElement && (
         <div>
           <button className="bg-slate-400" onClick={deleteNode}>Delete Node</button>
@@ -323,18 +324,23 @@ const ConspiracyController = () => {
             value={selectedElement}
             onChange={handleIdChange}
           />
-          <select value={targetSelectedElement} onChange={(e) => setTargetSelectedElement(e.target.value)}>
-            <option value="" disabled>
-              Select a node
-            </option>
-            {elementsHolder.map((item, index) => (
-            <option key={index} value={item.data.id}>
-                {item.data.id}
-            </option>
-            ))}
-          </select>
+          <Select
+            class="react-select" className="react-select"
+            value={elementsHolder.find((item) => item.data.id === targetSelectedElement)}
+            onChange={(selectedOption) => setTargetSelectedElement(selectedOption.data.id)}
+            options={elementsHolder.map((item) => ({
+            ...item, // Spread the original item data
+            value: item.data.id,
+            label: item.data.id,
+            }))}
+              placeholder="Select a node"
+            isSearchable
+            getOptionValue={(option) => option.data.id}  // Use the original `data.id` as the value
+            getOptionLabel={(option) => option.data.id}  // Display the `data.id` as the label
+          />
           <button onClick={addNewElementLink}>Link</button><button onClick={removeElementLink}>Delete Links</button>
           <div>
+            <span>Background image</span>
             <input type="file" id="backgroundImageInput" name="file" onClick={(e) => setImageHolder(e.target.value)}/>
             <button onClick={addStyle}>Set image background</button>
           </div>

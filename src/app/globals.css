@@ -44,3 +44,10 @@ button {
 input {
   background-color: aquamarine;
 }
+
+.react-select {
+  height: min-content;
+  width: 200px;
+  min-width: min-content;
+  display: inline-block;
+}
