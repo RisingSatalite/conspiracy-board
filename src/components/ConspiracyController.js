@@ -316,6 +316,16 @@ const ConspiracyController = () => {
         getOptionValue={(option) => option.data.id}  // Use the original `data.id` as the value
         getOptionLabel={(option) => option.data.id}  // Display the `data.id` as the label
       />
+      <select value={selectedElement} onChange={setingSelectedElement}>
+        <option value="" disabled>
+          Select a node
+        </option>
+        {elementsHolder.map((item, index) => (
+        <option key={index} value={item.data.id}>
+            {item.data.id}
+        </option>
+        ))}
+      </select>
       {selectedElement && (
         <div>
           <button className="bg-slate-400" onClick={deleteNode}>Delete Node</button>
