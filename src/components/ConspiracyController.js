@@ -316,14 +316,14 @@ const ConspiracyController = () => {
         getOptionValue={(option) => option.data.id}  // Use the original `data.id` as the value
         getOptionLabel={(option) => option.data.id}  // Display the `data.id` as the label
       />
-      <select value={selectedElement} onChange={setingSelectedElement}>
+      <select value={graphType} onChange={handleGraphChange}>
         <option value="" disabled>
-          Select a node
+          Choose an display layout
         </option>
-        {elementsHolder.map((item, index) => (
-        <option key={index} value={item.data.id}>
-            {item.data.id}
-        </option>
+        {possibleGraphTypes.map((item, index) => (
+          <option key={index} value={item}>
+            {item}
+          </option>
         ))}
       </select>
       {selectedElement && (
