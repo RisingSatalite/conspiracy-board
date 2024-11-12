@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver';
 
 const ConspiracyController = () => {
   const [graphType, setGraphType] = useState("circle");
-  const possibleGraphTypes = ["cose", "grid", "concentric", "circle", "avsdf", "klay"];
+  const possibleGraphTypes = ["cose", "grid", "concentric", "circle", "avsdf", "klay", "cola"];
 
   const [imageHolder, setImageHolder] = useState(null)
 
