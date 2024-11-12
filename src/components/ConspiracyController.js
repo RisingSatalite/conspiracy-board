@@ -14,6 +14,16 @@ const ConspiracyController = () => {
 
   const [imageHolder, setImageHolder] = useState(null)
 
+  const [autoAlignState, setAutoAlignState] = useState(false)
+
+  const reverseAlignState = () => {
+    if(autoAlignState){
+      setAutoAlignState(false)
+    }else{
+      setAutoAlignState(true)
+    }
+  }
+
   const handleGraphChange = (event) => {
     setGraphType(event.target.value);
   };
@@ -326,6 +336,7 @@ const ConspiracyController = () => {
           </option>
         ))}
       </select>
+      <button className="bg-slate-400" onClick={reverseAlignState}>Auto align</button>
       {selectedElement && (
         <div>
           <button className="bg-slate-400" onClick={deleteNode}>Delete Node</button>
@@ -356,7 +367,7 @@ const ConspiracyController = () => {
           </div>
         </div>
       )}
-      <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={nodeStyle}/>
+      <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={nodeStyle} autoAlign={autoAlignState}/>
     </div>
   );
 };
