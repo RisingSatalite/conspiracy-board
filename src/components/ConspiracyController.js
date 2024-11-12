@@ -336,7 +336,7 @@ const ConspiracyController = () => {
           </option>
         ))}
       </select>
-      <button className="bg-slate-400" onClick={reverseAlignState}>Auto align</button>
+      <button className="bg-slate-400" onClick={reverseAlignState}>Auto align{(autoAlignState==true) && (<span> On</span>)}{(autoAlignState==false) && (<span> Off</span>)}</button>
       {selectedElement && (
         <div>
           <button className="bg-slate-400" onClick={deleteNode}>Delete Node</button>
