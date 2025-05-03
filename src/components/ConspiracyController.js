@@ -9,6 +9,8 @@ import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
 
 const ConspiracyController = () => {
+  const [name, setName] = useState('Conspiracy')
+  
   const [graphType, setGraphType] = useState("circle");
   const possibleGraphTypes = ["cose", "grid", "concentric", "circle", "avsdf", "klay", "cola"];
 
@@ -261,7 +263,7 @@ const ConspiracyController = () => {
     //Node Diagram View NDV format
     const nodeInformation = {nodes: elementsHolder, arrows: elementsLinks, style: nodeStyle};
     const jsonObj = JSON.stringify(nodeInformation)
-    downloadFile("node diagram.ndv", jsonObj)
+    downloadFile(name+".ndv", jsonObj)
   }
 
   const downloadFile = (filename, content) => {
@@ -277,7 +279,7 @@ const ConspiracyController = () => {
     domtoimage.toBlob(document.getElementById("cy"))
     .then(function (blob) {
         var FileSaver = require('file-saver');
-        FileSaver.saveAs(blob, 'conspiracy.png');
+        FileSaver.saveAs(blob, name+'.png');
     });
   }
 
@@ -289,7 +291,7 @@ const ConspiracyController = () => {
       // Remove the `data:image/svg+xml;charset=utf-8,` prefix
       const svgContent = dataUrl.replace(/^data:image\/svg\+xml;charset=utf-8,/, '');
       const svgBlob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
-      saveAs(svgBlob, 'conspiracy.svg');
+      saveAs(svgBlob, name+'.svg');
     })
     .catch((error) => {
       console.error('Error converting HTML to SVG:', error);
@@ -298,6 +300,12 @@ const ConspiracyController = () => {
 
   return (
     <div>
+      <input
+          type="text"
+          onChange={(e) => setName(e.target.value)}
+          value={name}
+          placeholder="Name your drawing name"
+        />
       <input
         type="file"
         accept=".ndv"
