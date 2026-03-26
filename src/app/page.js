@@ -1,5 +1,5 @@
-import Image from "next/image";
-import CytoscapeComponent from "@/components/CytoscapeComponent";
+'use client'
+
 import ConspiracyController from "@/components/ConspiracyController";
 
 export default function Home() {
