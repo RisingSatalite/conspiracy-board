@@ -448,17 +448,26 @@ const ConspiracyController = () => {
                   getOptionValue={(option) => option.data.id}
                   getOptionLabel={(option) => option.data.id}
                 />
-                <div className="flex gap-2 mt-2">
-                  <button onClick={addNewElementLink} className="px-2 py-1 bg-slate-200 rounded">Link</button>
-                  <button onClick={removeElementLink} className="px-2 py-1 bg-slate-200 rounded">Delete Links</button>
-                </div>
+                <button onClick={addNewElementLink} className="px-2 py-1 bg-slate-200 rounded">Link</button>
+                <button onClick={removeElementLink} className="px-2 py-1 bg-slate-200 rounded">Delete Links</button>
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span>Background image</span>
-                  <input type="file" id="backgroundImageInput" name="file" onClick={(e) => setImageHolder(e.target.value)}/>
-                  <button onClick={addStyle} className="px-2 py-1 bg-slate-200 rounded">Set background image</button>
-                </div>
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <span>Background image</span>
+                    <input
+                      type="file"
+                      id="backgroundImageInput"
+                      name="file"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files && e.target.files[0];
+                        if (file) setImageHolder(file.name);
+                      }}
+                    />
+                    <label htmlFor="backgroundImageInput" className="px-2 py-1 bg-slate-100 rounded cursor-pointer">Choose image</label>
+                    <span className="max-w-[160px] truncate text-sm text-gray-600">{imageHolder || 'No file chosen'}</span>
+                    <button onClick={addStyle} className="ml-auto px-2 py-1 bg-slate-200 rounded">Set image background</button>
+                  </div>
                 <div className="flex items-center gap-2 mt-2">
                   <span>Background color</span>
                   <input
