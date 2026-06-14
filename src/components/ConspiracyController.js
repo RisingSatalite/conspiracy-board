@@ -368,94 +368,117 @@ const ConspiracyController = () => {
   }
 
   return (
-    <div>
-      <input
-          type="text"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          placeholder="Name your drawing name"
-        />
-      <input
-        type="file"
-        accept=".ndv"
-        onChange={uploadData}
-        style={{ display: 'none' }}
-        id="fileInput"
-      />
-      <button onClick={() => document.getElementById('fileInput').click()}>Upload data</button>
-      <button onClick={downloadData}>Download data</button>
-      <button onClick={exportImage}>Download PNG image</button>
-      <button onClick={exportSVG}>Download SVG image</button>
-      <br/>
-      <span>Controller</span>
-      <button className="bg-slate-400" onClick={addNode}>Add Node</button>
-      <Select
-        class="react-select" className="react-select"
-        value={elementsHolder.find((item) => item.data.id === selectedElement)}
-        onChange={(selectedOption) => setSelectedElement(selectedOption.data.id)}
-        options={elementsHolder.map((item) => ({
-        ...item, // Spread the original item data
-        value: item.data.id,
-        label: item.data.id,
-        }))}
-          placeholder="Select a node"
-        isSearchable
-        getOptionValue={(option) => option.data.id}  // Use the original `data.id` as the value
-        getOptionLabel={(option) => option.data.id}  // Display the `data.id` as the label
-      />
-      <select value={graphType} onChange={handleGraphChange}>
-        <option value="" disabled>
-          Choose an display layout
-        </option>
-        {possibleGraphTypes.map((item, index) => (
-          <option key={index} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
-      <button className="bg-slate-400" onClick={reverseAlignState}>Auto align{(autoAlignState==true) && (<span> On</span>)}{(autoAlignState==false) && (<span> Off</span>)}</button>
-      {selectedElement && (
-        <div>
-          <button className="bg-slate-400" onClick={deleteNode}>Delete Node</button>
+    <div className="relative">
+      <div className="absolute top-4 left-4 z-50 bg-white bg-opacity-95 p-4 rounded shadow max-w-md">
+        <div className="flex flex-col gap-2">
           <input
-            className="bg-stone-300"
-            value={selectedElement}
-            onChange={handleIdChange}
+            type="text"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            placeholder="Name your drawing name"
+            className="p-1 border rounded"
           />
-          <Select
-            class="react-select" className="react-select"
-            value={elementsHolder.find((item) => item.data.id === targetSelectedElement)}
-            onChange={(selectedOption) => setTargetSelectedElement(selectedOption.data.id)}
-            options={elementsHolder.map((item) => ({
-            ...item, // Spread the original item data
-            value: item.data.id,
-            label: item.data.id,
-            }))}
-              placeholder="Select a node"
-            isSearchable
-            getOptionValue={(option) => option.data.id}  // Use the original `data.id` as the value
-            getOptionLabel={(option) => option.data.id}  // Display the `data.id` as the label
+          <input
+            type="file"
+            accept=".ndv"
+            onChange={uploadData}
+            style={{ display: 'none' }}
+            id="fileInput"
           />
-          <button onClick={addNewElementLink}>Link</button><button onClick={removeElementLink}>Delete Links</button>
+          <div className="flex gap-2">
+            <button onClick={() => document.getElementById('fileInput').click()} className="px-2 py-1 bg-slate-200 rounded">Upload</button>
+            <button onClick={downloadData} className="px-2 py-1 bg-slate-200 rounded">Download</button>
+            <button onClick={exportImage} className="px-2 py-1 bg-slate-200 rounded">PNG</button>
+            <button onClick={exportSVG} className="px-2 py-1 bg-slate-200 rounded">SVG</button>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="bg-slate-400 px-2 py-1 rounded" onClick={addNode}>Add Node</button>
+            <select value={graphType} onChange={handleGraphChange} className="p-1 border rounded">
+              <option value="" disabled>
+                Choose layout
+              </option>
+              {possibleGraphTypes.map((item, index) => (
+                <option key={index} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+            <button className="bg-slate-400 px-2 py-1 rounded" onClick={reverseAlignState}>Auto align{(autoAlignState==true) && (<span> On</span>)}{(autoAlignState==false) && (<span> Off</span>)}</button>
+          </div>
+
           <div>
-            <span>Background image</span>
-            <input type="file" id="backgroundImageInput" name="file" onClick={(e) => setImageHolder(e.target.value)}/>
-            <button onClick={addStyle}>Set image background</button>
-          </div>
-          <div style={{ marginTop: '8px' }}>
-            <span>Background color</span>
-            <input
-              type="color"
-              value={(elementsHolder.find(item => item.data.id === selectedElement) || {}).data?.backgroundColor || '#666666'}
-              onChange={(e) => setNodeBackgroundColor(e.target.value)}
-              style={{ marginLeft: '8px' }}
+            <Select
+              className="react-select"
+              value={elementsHolder.find((item) => item.data.id === selectedElement)}
+              onChange={(selectedOption) => setSelectedElement(selectedOption.data.id)}
+              options={elementsHolder.map((item) => ({
+                ...item,
+                value: item.data.id,
+                label: item.data.id,
+              }))}
+              placeholder="Select a node"
+              isSearchable
+              getOptionValue={(option) => option.data.id}
+              getOptionLabel={(option) => option.data.id}
             />
-            <button onClick={() => setNodeBackgroundColor((elementsHolder.find(item => item.data.id === selectedElement) || {}).data?.backgroundColor || '#666666')} style={{ marginLeft: '8px' }}>Set color</button>
-            <button onClick={clearNodeBackgroundColor} style={{ marginLeft: '8px' }}>Clear color</button>
           </div>
+
+          {selectedElement && (
+            <div className="mt-2 space-y-2">
+              <div className="flex gap-2">
+                <button className="bg-slate-400 px-2 py-1 rounded" onClick={deleteNode}>Delete Node</button>
+                <input
+                  className="bg-stone-300 p-1 rounded"
+                  value={selectedElement}
+                  onChange={handleIdChange}
+                />
+              </div>
+              <div>
+                <Select
+                  className="react-select"
+                  value={elementsHolder.find((item) => item.data.id === targetSelectedElement)}
+                  onChange={(selectedOption) => setTargetSelectedElement(selectedOption.data.id)}
+                  options={elementsHolder.map((item) => ({
+                    ...item,
+                    value: item.data.id,
+                    label: item.data.id,
+                  }))}
+                  placeholder="Select a node"
+                  isSearchable
+                  getOptionValue={(option) => option.data.id}
+                  getOptionLabel={(option) => option.data.id}
+                />
+                <div className="flex gap-2 mt-2">
+                  <button onClick={addNewElementLink} className="px-2 py-1 bg-slate-200 rounded">Link</button>
+                  <button onClick={removeElementLink} className="px-2 py-1 bg-slate-200 rounded">Delete Links</button>
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span>Background image</span>
+                  <input type="file" id="backgroundImageInput" name="file" onClick={(e) => setImageHolder(e.target.value)}/>
+                  <button onClick={addStyle} className="px-2 py-1 bg-slate-200 rounded">Set background image</button>
+                </div>
+                <div className="flex items-center gap-2 mt-2">
+                  <span>Background color</span>
+                  <input
+                    type="color"
+                    value={(elementsHolder.find(item => item.data.id === selectedElement) || {}).data?.backgroundColor || '#666666'}
+                    onChange={(e) => setNodeBackgroundColor(e.target.value)}
+                    className="ml-2"
+                  />
+                  <button onClick={() => setNodeBackgroundColor((elementsHolder.find(item => item.data.id === selectedElement) || {}).data?.backgroundColor || '#666666')} className="px-2 py-1 bg-slate-200 rounded">Set color</button>
+                  <button onClick={clearNodeBackgroundColor} className="px-2 py-1 bg-slate-200 rounded">Clear color</button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      )}
-      <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={nodeStyle} autoAlign={autoAlignState}/>
+      </div>
+
+      <div>
+        <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={nodeStyle} autoAlign={autoAlignState}/>
+      </div>
     </div>
   );
 };
