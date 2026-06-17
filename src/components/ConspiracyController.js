@@ -16,6 +16,8 @@ const ConspiracyController = () => {
 
   const [imageHolder, setImageHolder] = useState(null)
 
+  const [overlayCollapsed, setOverlayCollapsed] = useState(false)
+
   const [autoAlignState, setAutoAlignState] = useState(false)
 
   const reverseAlignState = () => {
@@ -369,15 +371,29 @@ const ConspiracyController = () => {
 
   return (
     <div className="relative">
-      <div className="absolute top-4 left-4 z-50 bg-white bg-opacity-95 p-4 rounded shadow max-w-md">
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            placeholder="Name your drawing name"
-            className="p-1 border rounded"
-          />
+      <div className="absolute top-4 left-4 z-50 bg-white bg-opacity-95 rounded shadow max-w-md">
+        <div className="flex items-center justify-between p-2 border-b bg-white bg-opacity-95 rounded-t">
+          <span className="font-medium">Controls</span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setOverlayCollapsed(!overlayCollapsed)}
+              className="px-2 py-1 bg-slate-200 rounded text-sm"
+              aria-expanded={!overlayCollapsed}
+            >
+              {overlayCollapsed ? 'Expand' : 'Collapse'}
+            </button>
+          </div>
+        </div>
+
+        {!overlayCollapsed && (
+          <div className="p-4 flex flex-col gap-2">
+            <input
+              type="text"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              placeholder="Name your drawing name"
+              className="p-1 border rounded"
+            />
           <input
             type="file"
             accept=".ndv"
@@ -481,8 +497,9 @@ const ConspiracyController = () => {
                 </div>
               </div>
             </div>
+            )}
+          </div>
           )}
-        </div>
       </div>
 
       <div>
