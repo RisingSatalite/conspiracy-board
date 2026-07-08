@@ -63,7 +63,7 @@ const ConspiracyBoard = (
     };
   }, [elementsHolder, graphType, style, autoAlign]);
 
-  return <div id="cy" style={{ width: '100%', height: '1000px' }} />;
+  return <div className="h-screen" id="cy" style={{ width: '100%'}} />;
 };
 
 export default ConspiracyBoard;

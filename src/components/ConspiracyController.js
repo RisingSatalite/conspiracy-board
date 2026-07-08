@@ -503,7 +503,7 @@ const ConspiracyController = () => {
       </div>
 
       <div>
-        <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={nodeStyle} autoAlign={autoAlignState}/>
+        <ConspiracyBoard className="h-screen" elementsHolder={allElements} graphType={graphType} style={nodeStyle} autoAlign={autoAlignState}/>
       </div>
     </div>
   );
