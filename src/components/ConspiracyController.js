@@ -16,6 +16,8 @@ const ConspiracyController = () => {
 
   const [imageHolder, setImageHolder] = useState(null)
 
+  const [overlayCollapsed, setOverlayCollapsed] = useState(false)
+
   const [autoAlignState, setAutoAlignState] = useState(false)
 
   const reverseAlignState = () => {
@@ -118,6 +120,55 @@ const ConspiracyController = () => {
     }
   };
 
+    const setNodeBackgroundColor = (color) => {
+      if (!selectedElement) {
+        console.log('No node selected.');
+        alert('No node selected.');
+        return;
+      }
+
+      // Update node data so exporter includes the color
+      setElementsHolder(prev => prev.map(item =>
+        item.data.id === selectedElement ? { ...item, data: { ...item.data, backgroundColor: color } } : item
+      ));
+
+      // Update style for the specific node selector
+      let usedBefore = false;
+      const styleIDChange = nodeStyle.map(item => {
+        if (item.selector === `node[id = "${selectedElement}"]`) {
+          usedBefore = true;
+          return { ...item, style: { ...item.style, 'background-color': color } };
+        }
+        return item;
+      });
+
+      if (usedBefore) {
+        setStyle(styleIDChange);
+      } else {
+        setStyle(prev => [...prev, { selector: `node[id = "${selectedElement}"]`, style: { 'background-color': color, label: 'data(id)' } }]);
+      }
+    };
+
+    const clearNodeBackgroundColor = () => {
+      if (!selectedElement) return;
+
+      // Remove backgroundColor from node data
+      setElementsHolder(prev => prev.map(item =>
+        item.data.id === selectedElement ? { ...item, data: (({ backgroundColor, ...rest }) => ({ ...rest }))(item.data) } : item
+      ));
+
+      // Remove background-color from the node-specific style (if present)
+      const styleIDChange = nodeStyle.map(item => {
+        if (item.selector === `node[id = "${selectedElement}"]`) {
+          const { ['background-color']: _, ...restStyles } = item.style || {};
+          return { ...item, style: restStyles };
+        }
+        return item;
+      }).filter(item => !(item.selector === `node[id = "${selectedElement}"]` && Object.keys(item.style || {}).length === 0));
+
+      setStyle(styleIDChange);
+    };
+
   const [elementsHolder, setElementsHolder] = useState([
     { data: { id: 'a' } },
     { data: { id: 'b' } },
@@ -194,7 +245,7 @@ const ConspiracyController = () => {
   // Function to add a new node
   const addNode = () => {
     const newNodeId = generateUniqueId();
-    const newNode = { data: { id: newNodeId } };
+    const newNode = { data: { id: newNodeId, backgroundColor: '#666666' } };
     setElementsHolder((prevElements) => [...prevElements, newNode]);
   };
 
@@ -247,9 +298,29 @@ const ConspiracyController = () => {
       const content = e.target.result;
       try{
         const data = JSON.parse(content)
-        setElementsHolder(data.nodes)
-        setElementLinks(data.arrows)
-        setStyle(data.style)
+        const importedNodes = data.nodes || [];
+        const importedArrows = data.arrows || [];
+        const importedStyle = data.style || [];
+
+        // Build node-specific styles from node data (backgroundColor)
+        const nodeColorStyles = importedNodes
+          .map(n => (n.data && n.data.backgroundColor) ? { selector: `node[id = "${n.data.id}"]`, style: { 'background-color': n.data.backgroundColor } } : null)
+          .filter(Boolean);
+
+        // Merge importedStyle and nodeColorStyles: node-specific styles override general importedStyle selectors
+        const finalStyle = [...importedStyle];
+        nodeColorStyles.forEach(ncs => {
+          const idx = finalStyle.findIndex(s => s.selector === ncs.selector);
+          if (idx >= 0) {
+            finalStyle[idx] = { ...finalStyle[idx], style: { ...finalStyle[idx].style, ...ncs.style } };
+          } else {
+            finalStyle.push(ncs);
+          }
+        });
+
+        setElementsHolder(importedNodes)
+        setElementLinks(importedArrows)
+        setStyle(finalStyle)
       } catch (error) {
         console.error('Error parsing imported data:', error);
         alert('An error occurred while reading the data: ' + error);
@@ -299,83 +370,141 @@ const ConspiracyController = () => {
   }
 
   return (
-    <div>
-      <input
-          type="text"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          placeholder="Name your drawing name"
-        />
-      <input
-        type="file"
-        accept=".ndv"
-        onChange={uploadData}
-        style={{ display: 'none' }}
-        id="fileInput"
-      />
-      <button onClick={() => document.getElementById('fileInput').click()}>Upload data</button>
-      <button onClick={downloadData}>Download data</button>
-      <button onClick={exportImage}>Download PNG image</button>
-      <button onClick={exportSVG}>Download SVG image</button>
-      <br/>
-      <span>Controller</span>
-      <button className="bg-slate-400" onClick={addNode}>Add Node</button>
-      <Select
-        class="react-select" className="react-select"
-        value={elementsHolder.find((item) => item.data.id === selectedElement)}
-        onChange={(selectedOption) => setSelectedElement(selectedOption.data.id)}
-        options={elementsHolder.map((item) => ({
-        ...item, // Spread the original item data
-        value: item.data.id,
-        label: item.data.id,
-        }))}
-          placeholder="Select a node"
-        isSearchable
-        getOptionValue={(option) => option.data.id}  // Use the original `data.id` as the value
-        getOptionLabel={(option) => option.data.id}  // Display the `data.id` as the label
-      />
-      <select value={graphType} onChange={handleGraphChange}>
-        <option value="" disabled>
-          Choose an display layout
-        </option>
-        {possibleGraphTypes.map((item, index) => (
-          <option key={index} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
-      <button className="bg-slate-400" onClick={reverseAlignState}>Auto align{(autoAlignState==true) && (<span> On</span>)}{(autoAlignState==false) && (<span> Off</span>)}</button>
-      {selectedElement && (
-        <div>
-          <button className="bg-slate-400" onClick={deleteNode}>Delete Node</button>
-          <input
-            className="bg-stone-300"
-            value={selectedElement}
-            onChange={handleIdChange}
-          />
-          <Select
-            class="react-select" className="react-select"
-            value={elementsHolder.find((item) => item.data.id === targetSelectedElement)}
-            onChange={(selectedOption) => setTargetSelectedElement(selectedOption.data.id)}
-            options={elementsHolder.map((item) => ({
-            ...item, // Spread the original item data
-            value: item.data.id,
-            label: item.data.id,
-            }))}
-              placeholder="Select a node"
-            isSearchable
-            getOptionValue={(option) => option.data.id}  // Use the original `data.id` as the value
-            getOptionLabel={(option) => option.data.id}  // Display the `data.id` as the label
-          />
-          <button onClick={addNewElementLink}>Link</button><button onClick={removeElementLink}>Delete Links</button>
-          <div>
-            <span>Background image</span>
-            <input type="file" id="backgroundImageInput" name="file" onClick={(e) => setImageHolder(e.target.value)}/>
-            <button onClick={addStyle}>Set image background</button>
+    <div className="relative">
+      <div className="absolute top-4 left-4 z-50 bg-white bg-opacity-95 rounded shadow max-w-md">
+        <div className="flex items-center justify-between p-2 border-b bg-white bg-opacity-95 rounded-t">
+          <span className="font-medium">Controls</span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setOverlayCollapsed(!overlayCollapsed)}
+              className="px-2 py-1 bg-slate-200 rounded text-sm"
+              aria-expanded={!overlayCollapsed}
+            >
+              {overlayCollapsed ? 'Expand' : 'Collapse'}
+            </button>
           </div>
         </div>
-      )}
-      <ConspiracyBoard elementsHolder={allElements} graphType={graphType} style={nodeStyle} autoAlign={autoAlignState}/>
+
+        {!overlayCollapsed && (
+          <div className="p-4 flex flex-col gap-2">
+            <input
+              type="text"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              placeholder="Name your drawing name"
+              className="p-1 border rounded"
+            />
+          <input
+            type="file"
+            accept=".ndv"
+            onChange={uploadData}
+            style={{ display: 'none' }}
+            id="fileInput"
+          />
+          <div className="flex gap-2">
+            <button onClick={() => document.getElementById('fileInput').click()} className="px-2 py-1 bg-slate-200 rounded">Upload</button>
+            <button onClick={downloadData} className="px-2 py-1 bg-slate-200 rounded">Download</button>
+            <button onClick={exportImage} className="px-2 py-1 bg-slate-200 rounded">PNG</button>
+            <button onClick={exportSVG} className="px-2 py-1 bg-slate-200 rounded">SVG</button>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="bg-slate-400 px-2 py-1 rounded" onClick={addNode}>Add Node</button>
+            <select value={graphType} onChange={handleGraphChange} className="p-1 border rounded">
+              <option value="" disabled>
+                Choose layout
+              </option>
+              {possibleGraphTypes.map((item, index) => (
+                <option key={index} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+            <button className="bg-slate-400 px-2 py-1 rounded" onClick={reverseAlignState}>Auto align{(autoAlignState==true) && (<span> On</span>)}{(autoAlignState==false) && (<span> Off</span>)}</button>
+          </div>
+
+          <div>
+            <Select
+              className="react-select"
+              value={elementsHolder.find((item) => item.data.id === selectedElement)}
+              onChange={(selectedOption) => setSelectedElement(selectedOption.data.id)}
+              options={elementsHolder.map((item) => ({
+                ...item,
+                value: item.data.id,
+                label: item.data.id,
+              }))}
+              placeholder="Select a node"
+              isSearchable
+              getOptionValue={(option) => option.data.id}
+              getOptionLabel={(option) => option.data.id}
+            />
+          </div>
+
+          {selectedElement && (
+            <div className="mt-2 space-y-2">
+              <div className="flex gap-2">
+                <button className="bg-slate-400 px-2 py-1 rounded" onClick={deleteNode}>Delete Node</button>
+                <input
+                  className="bg-stone-300 p-1 rounded"
+                  value={selectedElement}
+                  onChange={handleIdChange}
+                />
+              </div>
+              <div>
+                <Select
+                  className="react-select"
+                  value={elementsHolder.find((item) => item.data.id === targetSelectedElement)}
+                  onChange={(selectedOption) => setTargetSelectedElement(selectedOption.data.id)}
+                  options={elementsHolder.map((item) => ({
+                    ...item,
+                    value: item.data.id,
+                    label: item.data.id,
+                  }))}
+                  placeholder="Select a node"
+                  isSearchable
+                  getOptionValue={(option) => option.data.id}
+                  getOptionLabel={(option) => option.data.id}
+                />
+                <button onClick={addNewElementLink} className="px-2 py-1 bg-slate-200 rounded">Link</button>
+                <button onClick={removeElementLink} className="px-2 py-1 bg-slate-200 rounded">Delete Links</button>
+              </div>
+              <div>
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <span>Background image</span>
+                    <input
+                      type="file"
+                      id="backgroundImageInput"
+                      name="file"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files && e.target.files[0];
+                        if (file) setImageHolder(file.name);
+                      }}
+                    />
+                    <label htmlFor="backgroundImageInput" className="px-2 py-1 bg-slate-100 rounded cursor-pointer">Choose image</label>
+                    <span className="max-w-[160px] truncate text-sm text-gray-600">{imageHolder || 'No file chosen'}</span>
+                    <button onClick={addStyle} className="ml-auto px-2 py-1 bg-slate-200 rounded">Set image background</button>
+                  </div>
+                <div className="flex items-center gap-2 mt-2">
+                  <span>Background color</span>
+                  <input
+                    type="color"
+                    value={(elementsHolder.find(item => item.data.id === selectedElement) || {}).data?.backgroundColor || '#666666'}
+                    onChange={(e) => setNodeBackgroundColor(e.target.value)}
+                    className="ml-2"
+                  />
+                  <button onClick={() => setNodeBackgroundColor((elementsHolder.find(item => item.data.id === selectedElement) || {}).data?.backgroundColor || '#666666')} className="px-2 py-1 bg-slate-200 rounded">Set color</button>
+                  <button onClick={clearNodeBackgroundColor} className="px-2 py-1 bg-slate-200 rounded">Clear color</button>
+                </div>
+              </div>
+            </div>
+            )}
+          </div>
+          )}
+      </div>
+
+      <div>
+        <ConspiracyBoard className="h-screen" elementsHolder={allElements} graphType={graphType} style={nodeStyle} autoAlign={autoAlignState}/>
+      </div>
     </div>
   );
 };
